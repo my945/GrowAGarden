@@ -1,0 +1,38 @@
+local Players = game:GetService("Players")
+local player = Players.LocalPlayer
+local backpack = player:WaitForChild("Backpack")
+local character = player.Character or player.CharacterAdded:Wait()
+
+-- GUI Setup
+local screenGui = Instance.new("ScreenGui")
+screenGui.Name = "CloneToolGui"
+screenGui.ResetOnSpawn = false
+screenGui.Parent = player:WaitForChild("PlayerGui")
+
+local button = Instance.new("TextButton")
+button.Size = UDim2.new(0, 200, 0, 50)
+button.Position = UDim2.new(0.5, -100, 0.8, 0)
+button.Text = "Clone Item"
+button.BackgroundColor3 = Color3.fromRGB(50, 150, 50)
+button.TextColor3 = Color3.new(1, 1, 1)
+button.Font = Enum.Font.SourceSansBold
+button.TextSize = 24
+button.Parent = screenGui
+
+-- Clone logic
+button.MouseButton1Click:Connect(function()
+	local character = player.Character
+	if not character then return end
+
+	-- Check if holding a tool
+	for _, item in pairs(character:GetChildren()) do
+		if item:IsA("Tool") then
+			local clone = item:Clone()
+			clone.Parent = backpack
+			print("Cloned:", item.Name)
+			return
+		end
+	end
+
+	warn("No item equipped to clone.")
+end)
